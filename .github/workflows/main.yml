@@ -1,21 +1,30 @@
-# This is a basic workflow
+# Call this whatever you want
 name: scrape
+
+# When does it get run?
 on:
+  # workflow_dispatch means "I can click a button and force it to run"
   workflow_dispatch:
+  # schedule/cron means "on a set schedule"
   schedule:
-    - cron: '*/20 * * * *'
+    - cron: '*/5 * * * *'
 jobs:
   scrape:
+    # For some reason, we run love versions of linux
     runs-on: ubuntu-latest
     steps:
+      # Download all of the code from your repo
       - name: Check out this repo
         uses: actions/checkout@v2
+      # Set up Python 3.9
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
+      # MAKE SURE YOUR SCRAPER FILENAME MATCHES THE FILENAME HERE!!
       - name: Run the scraping script
-        run: python scrape.py
+        run: python scraper.py
+      # I just stole the rest of this code so don't ask me questions about it
       - name: Commit and push if content changed
         run: |-
           git config user.name "Automated"
@@ -24,36 +33,4 @@ jobs:
           timestamp=$(date -u)
           git commit -m "Latest data: ${timestamp}" || exit 0
           git push
-
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+12:33
